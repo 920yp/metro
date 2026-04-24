@@ -1,12 +1,4 @@
-// 1. 切換分頁邏輯
-function showTab(tabId, btnElement) {
-    document.querySelectorAll('.content-section').forEach(section => section.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    document.getElementById(tabId).classList.add('active');
-    btnElement.classList.add('active');
-}
-
-// 2. 車站資料庫 (之後增加車站只需改這裡)
+// 1. 車站資料庫
 const stationData = [
     { name: "弘大入口", line: "2號線, A'REX", spot: "弘大商圈、風川鰻魚", transfer: "轉乘機場快線請往地下 4 層" },
     { name: "安國", line: "3號線", spot: "北村韓屋村、倫敦貝果", transfer: "無需轉乘" },
@@ -15,20 +7,40 @@ const stationData = [
     { name: "聖水", line: "2號線", spot: "聖水一隻雞、首爾林", transfer: "無需轉乘" }
 ];
 
-// 3. 初始化選單：當網頁讀取完畢後自動執行
-window.onload = function() {
+// 2. 初始化選單功能 (確保 HTML 跑完才執行)
+function initSelects() {
     const singleSelect = document.getElementById('stationSelect');
     const startSelect = document.getElementById('startSelect');
     const endSelect = document.getElementById('endSelect');
 
+    if (!singleSelect) return; // 防錯機制
+
+    // 清空舊選項 (保留第一個預設值)
+    singleSelect.length = 1;
+    startSelect.length = 1;
+    endSelect.length = 1;
+
     stationData.forEach(station => {
-        // 單站查詢選單
         singleSelect.options.add(new Option(station.name, station.name));
-        // 路線規劃選單
         startSelect.options.add(new Option(station.name, station.name));
         endSelect.options.add(new Option(station.name, station.name));
     });
-};
+}
+
+// 監聽網頁載入完成事件
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSelects);
+} else {
+    initSelects();
+}
+
+// 3. 切換分頁邏輯
+function showTab(tabId, btnElement) {
+    document.querySelectorAll('.content-section').forEach(section => section.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    btnElement.classList.add('active');
+}
 
 // 4. 下拉選單查詢車站
 function findStation() {
@@ -58,9 +70,7 @@ function findRoute() {
         return;
     }
 
-    let advice = `搭乘地鐵從 ${start} 前往 ${end}。請查看站內看板確認方向。`;
-    
-    // 轉乘邏輯 (2號線轉3號線)
+    let advice = `搭乘地鐵從 ${start} 前往 ${end}。`;
     const line2Stations = ["弘大入口", "聖水"];
     const line3Stations = ["安國", "景福宮"];
 
