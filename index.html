@@ -1,34 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>首爾地鐵小幫手</title>
+    <style>
+        body { font-family: -apple-system, sans-serif; background-color: #f0f2f5; margin: 0; display: flex; justify-content: center; min-height: 100vh; }
+        .container { width: 100%; max-width: 400px; background: white; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); min-height: 100vh; box-sizing: border-box; }
+        h1 { font-size: 1.2rem; text-align: center; color: #333; margin-bottom: 20px; }
+        .tab-menu { display: flex; gap: 5px; margin-bottom: 15px; }
+        .tab-btn { flex: 1; padding: 12px 5px; border: none; background: #eee; border-radius: 8px; font-size: 0.85rem; cursor: pointer; }
+        .tab-btn.active { background: #00923f; color: white; font-weight: bold; }
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
+        .search-btn { width: 100%; padding: 14px; background: #00923f; color: white; border: none; border-radius: 8px; margin-top: 10px; font-weight: bold; cursor: pointer; }
+        .map-container { width: 100%; overflow: auto; border: 1px solid #ddd; border-radius: 8px; margin-top: 15px; background: #fff; -webkit-overflow-scrolling: touch; }
+        .map-container img { width: 300%; height: auto; display: block; }
+        .result-card { background: #f9f9f9; padding: 15px; border-radius: 8px; border-left: 5px solid #00923f; margin-top: 15px; font-size: 0.95rem; line-height: 1.6; }
+    </style>
+</head>
 <body>
     <div class="container">
+        <h1>🇰🇷 首爾地鐵小幫手</h1>
+        
+        <div class="tab-menu">
+            <button class="tab-btn active" onclick="showTab('single', this)">單站查詢</button>
+            <button class="tab-btn" onclick="showTab('route', this)">路線規劃</button>
+            <button class="tab-btn" onclick="showTab('map', this)">地鐵圖</button>
         </div>
 
-    <script>
-        // 直接將所有邏輯寫在這裡，確保按鈕絕對有反應
-        function showTab(tabId) {
-            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            if (event) event.currentTarget.classList.add('active');
-        }
+        <div id="single" class="content-section active">
+            <input type="text" id="stationInput" placeholder="輸入車站名稱 (如：弘大)">
+            <button class="search-btn" onclick="findStation()">搜尋車站資訊</button>
+            <div id="singleResult"></div>
+        </div>
 
-        const stationData = [
-            { name: "弘大入口", line: "2號線, A'REX", spot: "弘大商圈", transfer: "轉乘機場快線請往地下 4 層" },
-            { name: "安國", line: "3號線", spot: "北村韓屋村", transfer: "無需轉乘" },
-            { name: "鐘路3街", line: "1, 3, 5號線", spot: "益善洞", transfer: "建議經由3號線中轉" }
-        ];
+        <div id="route" class="content-section">
+            <input type="text" id="startStation" placeholder="從哪裡出發？">
+            <input type="text" id="endStation" placeholder="目的地在哪？">
+            <button class="search-btn" onclick="findRoute()">規劃轉乘路線</button>
+            <div id="routeResult"></div>
+        </div>
 
-        function findStation() {
-            const input = document.getElementById('stationInput').value;
-            const res = document.getElementById('singleResult');
-            const data = stationData.find(s => s.name.includes(input));
-            res.innerHTML = data ? `<div class="result-card"><h3>${data.name}</h3><p>路線：${data.line}</p><p>熱點：${data.spot}</p></div>` : "找不到車站";
-        }
+        <div id="map" class="content-section">
+            <p style="font-size: 0.75rem; color: #888; text-align: center;">提示：圖片可左右上下滑動</p>
+            <div class="map-container">
+                <img src="_download_map_chinese.jpg" alt="首爾地鐵圖">
+            </div>
+        </div>
+    </div>
 
-        function findRoute() {
-            const start = document.getElementById('startStation').value;
-            const end = document.getElementById('endStation').value;
-            const res = document.getElementById('routeResult');
-            res.innerHTML = `<div class="result-card">建議從 ${start} 搭乘地鐵，於乙支路3街轉乘至 ${end}。</div>`;
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
+</html>
