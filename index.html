@@ -36,12 +36,16 @@
     </div>
 
     <script src="script.js"></script>
+
     <script>
-        // 為了讓 tab 切換正常運作的小補丁
-        function routeTab(e) {
-            showTab('route');
-            e.currentTarget.classList.add('active');
+        function showTab(tabId) {
+            // 隱藏所有區塊
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            // 取消所有按鈕選取狀態
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            // 顯示點選的區塊與按鈕
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
         }
     </script>
 </body>
-</html>
