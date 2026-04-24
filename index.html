@@ -7,17 +7,21 @@
     <style>
         body { font-family: -apple-system, sans-serif; background-color: #f0f2f5; margin: 0; display: flex; justify-content: center; min-height: 100vh; }
         .container { width: 100%; max-width: 400px; background: white; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); min-height: 100vh; box-sizing: border-box; }
-        h1 { font-size: 1.2rem; text-align: center; color: #333; margin-bottom: 20px; }
-        .tab-menu { display: flex; gap: 5px; margin-bottom: 15px; }
+        h1 { font-size: 1.25rem; text-align: center; color: #333; margin-bottom: 20px; }
+        .tab-menu { display: flex; gap: 5px; margin-bottom: 20px; }
         .tab-btn { flex: 1; padding: 12px 5px; border: none; background: #eee; border-radius: 8px; font-size: 0.85rem; cursor: pointer; }
         .tab-btn.active { background: #00923f; color: white; font-weight: bold; }
         .content-section { display: none; }
         .content-section.active { display: block; }
-        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
+        
+        /* 下拉選單樣式 */
+        select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; background-color: #fff; appearance: none; }
+        .label-text { font-size: 0.9rem; color: #666; margin-left: 5px; }
+
         .search-btn { width: 100%; padding: 14px; background: #00923f; color: white; border: none; border-radius: 8px; margin-top: 10px; font-weight: bold; cursor: pointer; }
-        .map-container { width: 100%; overflow: auto; border: 1px solid #ddd; border-radius: 8px; margin-top: 15px; background: #fff; -webkit-overflow-scrolling: touch; }
-        .map-container img { width: 300%; height: auto; display: block; }
-        .result-card { background: #f9f9f9; padding: 15px; border-radius: 8px; border-left: 5px solid #00923f; margin-top: 15px; font-size: 0.95rem; line-height: 1.6; }
+        .map-container { width: 100%; height: 60vh; overflow: scroll; border: 1px solid #ddd; border-radius: 8px; margin-top: 15px; background: #fafafa; }
+        .map-container img { width: 350%; height: auto; display: block; } /* 圖片設大一點方便滑動 */
+        .result-card { background: #f9f9f9; padding: 15px; border-radius: 8px; border-left: 5px solid #00923f; margin-top: 20px; font-size: 0.95rem; line-height: 1.6; }
     </style>
 </head>
 <body>
@@ -31,22 +35,27 @@
         </div>
 
         <div id="single" class="content-section active">
-            <input type="text" id="stationInput" placeholder="輸入車站名稱 (如：弘大)">
-            <button class="search-btn" onclick="findStation()">搜尋車站資訊</button>
+            <span class="label-text">選擇車站：</span>
+            <select id="stationSelect">
+                <option value="">-- 請選擇車站 --</option>
+            </select>
+            <button class="search-btn" onclick="findStation()">查看詳細資訊</button>
             <div id="singleResult"></div>
         </div>
 
         <div id="route" class="content-section">
-            <input type="text" id="startStation" placeholder="從哪裡出發？">
-            <input type="text" id="endStation" placeholder="目的地在哪？">
-            <button class="search-btn" onclick="findRoute()">規劃轉乘路線</button>
+            <span class="label-text">出發站：</span>
+            <select id="startSelect"><option value="">-- 請選擇起點 --</option></select>
+            <span class="label-text">終點站：</span>
+            <select id="endSelect"><option value="">-- 請選擇終點 --</option></select>
+            <button class="search-btn" onclick="findRoute()">開始規劃</button>
             <div id="routeResult"></div>
         </div>
 
         <div id="map" class="content-section">
-            <p style="font-size: 0.75rem; color: #888; text-align: center;">提示：圖片可左右上下滑動</p>
+            <p style="font-size: 0.75rem; color: #888; text-align: center;">💡 提示：圖片較大，可上下左右滑動</p>
             <div class="map-container">
-                <img src="metroMap" alt="首爾地鐵圖">
+                <img src="metroMap.jpg" alt="首爾地鐵圖">
             </div>
         </div>
     </div>
